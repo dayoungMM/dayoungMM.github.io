@@ -158,7 +158,7 @@ export default function Portfolio() {
       ],
       tech: [
         "Python","FastAPI","PostgreSQL","Redis","OpenSearch","LangChain","LangGraph","Kubernetes","Azure"],
-      images: ['https://aip-stg.sktai.io/developers/assets/images/agent_builder_08-8404c6cbded4f26e6263196539f53d5e.png', 'https://aip-stg.sktai.io/developers/assets/images/version_list-692542a50e7a69d24518f655276331b4.png'],
+      images: ['/axplatform_01.png', '/axplatform_02.png'],
       links: [],
     },
     {
@@ -177,7 +177,7 @@ export default function Portfolio() {
         "PoC 3건 수주 지원, 사내용 파일봇 대체 도입",
       ],
       tech: ["Python","Django","PostgreSQL","LangChain","Azure AI Search"],
-      images: [],
+      images: ['/solur_01.png', '/solur_02.png'],
       links: [],
     },
     {
@@ -196,7 +196,7 @@ export default function Portfolio() {
         "대규모 문서 인덱싱 시간 35%↓",
       ],
       tech: ["Python","FastAPI","LangChain","Java","Spring Cloud Gateway","MySQL","Azure"],
-      images: [],
+      images: ['/tokai_01.png', '/tokai_02.png'],
       links: [],
     },
     {
@@ -215,7 +215,7 @@ export default function Portfolio() {
         "알림 오탐 60%↓",
       ],
       tech: ["Kotlin","Spring Boot","PostgreSQL","AWS"],
-      images: [],
+      images: ['/aidenvas_01.png', '/aidenvas_02.png'],
       links: [],
     },
   ];
@@ -533,7 +533,7 @@ export default function Portfolio() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-sm flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Building2 className="size-4" />
-            <span>Based in Seoul · Open to collaboration</span>
+            <span>Based in Seoul</span>
           </div>
           <div className="flex flex-wrap items-center gap-4">
             <a className="inline-flex items-center gap-1" href={`mailto:${profile.email}`}>
