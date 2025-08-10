@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Github,
@@ -13,6 +13,7 @@ import {
   ExternalLink,
   ServerCog,
   Activity,
+  X,
 } from "lucide-react";
 
 // ---- Simple UI primitives ----
@@ -65,36 +66,52 @@ const Link = ({ href, children }) => (
 
 // ---- Page ----
 export default function Portfolio() {
+  const [lightboxOpen, setLightboxOpen] = useState({ isOpen: false, image: "", title: "" });
+  
+  // ESC 키로 라이트박스 닫기
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === 'Escape') {
+        setLightboxOpen({ isOpen: false, image: "", title: "" });
+      }
+    };
+    
+    if (lightboxOpen.isOpen) {
+      document.addEventListener('keydown', handleEsc);
+      return () => document.removeEventListener('keydown', handleEsc);
+    }
+  }, [lightboxOpen.isOpen]);
+  
   const profile = useMemo(
     () => ({
       name: "문다영",
-      title: "Backend Engineer · AI Orchestration",
+      title: "Backend Engineer · AI Engineer",
       phone: "010-4546-7582",
       email: "dalbeetm@gmail.com",
       github: "https://github.com/dayoungMM",
       blog: "https://velog.io/@mdy0102",
-      lectureDecks:
-        "https://drive.google.com/drive/folders/1iIaD9U95ERoE4qZWJhzhjxNAZshhBm50?usp=sharing",
-      about: [
-        {
-          h: "기술 리더십 & 전파",
-          p:
-            "최신 AI 트렌드를 사내에 전파하며 최초 AI Application 개발 프로젝트에 참여. SKT×SK C&C 합동 AIX TF 선발, AI 오케스트레이션 플랫폼 기획·개발 주도. 'Generation AI Orchestration' 주제로 총 56시간 사내 강의 진행.",
-        },
-        {
-          h: "AI Application 개발 역량",
-          p:
-            "A.X Platform, TokAI, Solur 등에서 백엔드 및 클라우드 전반 경험. LangGraph 기반 에이전트 생성·배포 서비스 설계·구현 주도. 프론트–백엔드–인프라 전 영역에서 문제 해결을 리드.",
-        },
-        {
-          h: "주도적 협업",
-          p:
-            "명확한 기획 부재 상황에서 Agent Builder 아이디어를 제안·구체화하여 화면·백엔드 설계를 주도. 추상 클래스 기반 공통 구조와 정교한 스키마 문서화로 협업/유지보수 효율 향상. 신규 온보딩용 기술 문서 작성.",
-        },
-      ],
+      lectureDecks: "https://drive.google.com/drive/folders/1iIaD9U95ERoE4qZWJhzhjxNAZshhBm50?usp=sharing",
+      image: "/me.jpg",
     }),
     []
   );
+
+  const profileImage = "/me.jpg";
+
+  const aboutContent = [
+    {
+      title: "AI Application 개발 역량",
+      description: "A.X Platform, TokAI, Solur 등 다양한 AI 서비스에서 백엔드·클라우드 전반을 경험했으며, 프론트엔드부터 인프라까지 전 영역에서 기술적 문제 해결을 리드했습니다."
+    },
+    {
+      title: "주도적 협업과 유지보수 효율을 높이는 구조 설계",
+      description: "명확한 기획 부재 상황에서 Agent Builder 아이디어를 제안·구체화하고, 추상 클래스 기반의 공통 구조와 정교한 스키마 문서화를 통해 협업과 유지보수 효율을 높였습니다. 신규 온보딩을 위한 기술 문서도 작성하여 팀 역량 확산에 기여했습니다."
+    },
+    {
+      title: "기술 리더십을 가진 지식 공유자",
+      description: "최신 AI 트렌드를 사내에 전파하며 최초 AI Application 개발 프로젝트에 참여했습니다. SKT×SK C&C 합동 AIX TF에 선발되어 AI 오케스트레이션 플랫폼의 기획과 개발을 주도했고, 'Generation AI Orchestration' 주제로 총 56시간의 사내 강의를 진행했습니다."
+    },
+  ];
 
   const experiences = [
     {
@@ -126,20 +143,23 @@ export default function Portfolio() {
       summary:
         "No‑Code로 Agent를 구성·배포하는 Agent Builder 개발 주도. LangGraph 코드 기반 에이전트의 CLI 배포 기능 구현.",
       responsibilities: [
-        "Agent 템플릿/노드 DSL 설계 및 스키마 확정",
-        "에이전트 실행/배포(클러스터·서버리스) 파이프라인 구현",
-        "LangGraph 기반 런타임 어댑터 및 실행 이력 트래킹(OTel/Phoenix) 연동",
-        "RBAC/조직 단위 워크스페이스 및 데이터 암호화 설계",
+        "도메인 특화 언어(DSL) 수립: Agent/노드/엣지/상태 등을 선언형 문법으로 정의하고, 시각화 UI와 1:1 매핑되도록 스키마·검증 규칙을 설계",
+        "LangChain/LangGraph 패턴 추출 및 No-Code화: 빈번한 에이전트 패턴을 추상 블록(템플릿)으로 정의해 드래그&드롭으로 조합 가능",
+        "FastAPI 백엔드와 Prompt/Tool 스토어 연동: 리소스를 카탈로그화하고 버저닝·권한 격리를 적용",
+        "팩토리 패턴 컴파일러 설계: Builder JSON을 LangGraph 코드로 컴파일하고, 경량화된 독립 컨테이너 런타임에서 실행",
+        "Agent 배포·버전 관리 체계 수립",
+        "LangServe 래핑 & 플랫폼 배포 CLI: LangGraph를 API 서버로 자동 래핑하고 컨테이너(Pod)로 배포 자동화"
       ],
       achievements: [
-        "사내 사용자 50+ 팀 온보딩, 빌드→배포 리드타임 60% 단축",
-        "CLI 배포 도입으로 PoC→운영 전환 기간 4주 → 1주",
-        "운영 장애 지표 기반 알림으로 MTTR 40%↓",
+        "No-Code + DSL로 비개발자 Agent 생성 허들을 대폭 낮추고 팀 간 공통 언어를 확립",
+        "에이전트 앱 배포 기능으로 Agent 버저닝으로 재현성과 롤백 용이성 향상",
+        "노드→LangGraph 변환 추상 레이어 도입으로 신규 기능 추가·변경 비용 감소 및 협업/온보딩 시간 단축",
+        "다양한 버티컬 에이전트를 단일 방식으로 통합 운영 가능(관제/모니터링 표준화)",
       ],
       tech: [
         "Python","FastAPI","PostgreSQL","Redis","OpenSearch","LangChain","LangGraph","Kubernetes","Azure"],
-      images: [],
-      links: [{ label: "소개 슬라이드", href: "https://drive.google.com/" }],
+      images: ['https://aip-stg.sktai.io/developers/assets/images/agent_builder_08-8404c6cbded4f26e6263196539f53d5e.png', 'https://aip-stg.sktai.io/developers/assets/images/version_list-692542a50e7a69d24518f655276331b4.png'],
+      links: [],
     },
     {
       name: "Solur (문서 기반 에이전트 생성)",
@@ -270,6 +290,7 @@ export default function Portfolio() {
       {/* Hero */}
       <section id="top" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid md:grid-cols-[1.2fr_.8fr] items-center gap-8">
+          {/* Left content */}
           <div>
             <motion.h1
               initial={{ opacity: 0, y: 6 }}
@@ -308,39 +329,29 @@ export default function Portfolio() {
             </Card>
           </div>
 
-          <Card>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div>
-                <p className="text-muted-foreground">현재 역할</p>
-                <p className="font-medium">백엔드 / AI 에이전트 플랫폼</p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">소속</p>
-                <p className="font-medium">SK AX (前 SK C&C)</p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">관심사</p>
-                <p className="font-medium">LangGraph, RAG, Serving</p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">위치</p>
-                <p className="font-medium">Seoul, KR</p>
-              </div>
-            </div>
-          </Card>
+          {/* Right profile image */}
+          <div className="flex justify-center md:justify-end">
+            <img
+              src={profileImage}
+              alt={`${profile.name} 프로필 사진`}
+              className="w-40 h-40 md:w-52 md:h-52 rounded-full object-cover border shadow-md"
+            />
+          </div>
         </div>
       </section>
 
       {/* About */}
       <Section id="about" title="About Me">
-        <div className="grid md:grid-cols-3 gap-4">
-          {profile.about.map((a) => (
-            <Card key={a.h}>
-              <p className="font-medium">{a.h}</p>
-              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{a.p}</p>
-            </Card>
-          ))}
-        </div>
+        {aboutContent.map((item, index) => (
+          <Card key={index}>
+            <p className="text-lg font-semibold">
+              {item.title}
+            </p>
+            <p className="mt-3 text-muted-foreground leading-relaxed">
+              {item.description}
+            </p>
+          </Card>
+        ))}
       </Section>
 
       {/* Career */}
@@ -368,7 +379,7 @@ export default function Portfolio() {
 
       {/* Projects */}
       <Section id="projects" title="대표 프로젝트" subtitle="각 프로젝트마다 수행 업무 · 주요 성과 · 사용 기술을 정리했습니다.">
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-1 gap-4">
           {projects.map((p) => (
             <Card key={p.name}>
               <div className="flex items-start justify-between gap-3">
@@ -386,7 +397,28 @@ export default function Portfolio() {
               {p.images && p.images.length > 0 && (
                 <div className="mt-4 grid grid-cols-2 gap-2">
                   {p.images.map((src, i) => (
-                    <img key={i} src={src} alt={`${p.name} 이미지 ${i + 1}`} className="rounded-xl border aspect-video object-cover" />
+                    <div key={i} className="relative group cursor-pointer">
+                      <div className="aspect-video w-full bg-slate-950/40 rounded-xl border overflow-hidden">
+                        <img
+                          src={src}
+                          alt={`${p.name} 이미지 ${i + 1}`}
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                      {/* Expand icon overlay */}
+                      <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <button
+                          onClick={() => setLightboxOpen({ isOpen: true, image: src, title: `${p.name} 이미지 ${i + 1}` })}
+                          className="select-none rounded-full bg-white/90 p-2 text-gray-800 shadow-lg hover:bg-white hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/40 transition-all duration-200"
+                          title="이미지 확대"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4">
+                            <path d="M17.5858 5H14V3H21V10H19V6.41421L14.7071 10.7071L13.2929 9.29289L17.5858 5ZM3 14H5V17.5858L9.29289 13.2929L10.7071 14.7071L6.41421 19H10V21H3V14Z"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               )}
@@ -474,6 +506,27 @@ export default function Portfolio() {
           ))}
         </div>
       </Section>
+
+      {/* Lightbox Modal */}
+      {lightboxOpen.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div className="relative max-w-4xl max-h-[90vh] mx-4">
+            <button
+              onClick={() => setLightboxOpen({ isOpen: false, image: "", title: "" })}
+              className="absolute -top-12 right-0 p-2 text-white hover:text-gray-300 transition-colors"
+            >
+              <X className="size-6" />
+            </button>
+            <div className="bg-white rounded-lg overflow-hidden shadow-2xl">
+              <img
+                src={lightboxOpen.image}
+                alt={lightboxOpen.title}
+                className="w-full h-auto max-h-[80vh] object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t">
